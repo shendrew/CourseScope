@@ -4,7 +4,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
-def __to_lower(text):
+def to_lower(text):
     return text.lower()
 
 def remove_numbers(text):
