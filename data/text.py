@@ -11,7 +11,7 @@ def remove_numbers(text):
     return re.sub(r"\d+", "", text)
 
 def remove_punctuation(text):
-    translator = str.maketrans('', '', string.punctuation)
+    translator = str.maketrans(string.punctuation, " "*len(string.punctuation))
     return text.translate(translator)
 
 def remove_stopwords(tokens):
