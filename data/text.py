@@ -14,6 +14,9 @@ def remove_punctuation(text):
     translator = str.maketrans(string.punctuation, " "*len(string.punctuation))
     return text.translate(translator)
 
+def remove_urls(text):
+    return re.sub(r"https?://\S+|www\.\S+", "", text)
+
 def remove_stopwords(tokens):
     stop_words = set(stopwords.words("english"))
     
@@ -33,6 +36,7 @@ def lemmatize(tokens):
 
 def process(text):
     new_text = to_lower(text)
+    new_text = remove_urls(new_text)
     new_text = remove_numbers(new_text)
     new_text = remove_punctuation(new_text)
     
