@@ -34,7 +34,7 @@ class TFIDFVectorizer:
         """
         Returns term frequencies of each word in every document.
         
-        rtype: np.array(int) (2d)
+        rtype: array(int) (2d)
         """
         
         ret = []
@@ -48,14 +48,14 @@ class TFIDFVectorizer:
             
             ret.append(cur_vector)
             
-        return np.array(ret)
+        return ret
     
     
     def getIDF(self):
         """
         Returns inverse document frequency of each token.
         
-        rtype: np.array(int) (2d)
+        rtype: list(int)
         """
         
         ret = []
@@ -67,10 +67,9 @@ class TFIDFVectorizer:
                     num_doc += 1
             idf = np.log(len(self.documents) / num_doc)
             
-            new_vector = [idf for i in range(len(self.documents))]
-            ret.append(new_vector)
+            ret.append(idf)
         
-        return np.array(ret)
+        return ret
         
         
     def getTFIDF(self):
@@ -79,5 +78,11 @@ class TFIDFVectorizer:
         
         rtype: np.array(int) (2d)
         """
-        
-        return np.multiply(self.getTF(), self.getIDF())
+                
+        tf = self.getTF()
+        idf = self.getIDF()
+        for token in range(len(tf)):
+            for value in range(len(tf[token])):
+                tf[token][value] *= idf[token]
+
+        return np.array(tf)
