@@ -1,8 +1,7 @@
 import re
-import string
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
+from nltk.stem import SnowballStemmer
 
 def to_lower(text):
     return text.lower()
@@ -11,28 +10,36 @@ def remove_numbers(text):
     return re.sub(r"\d+", "", text)
 
 def remove_punctuation(text):
-    translator = str.maketrans(string.punctuation, " "*len(string.punctuation))
-    return text.translate(translator)
+    return re.sub(r"[^\w\s]", "", text)
 
 def remove_urls(text):
     return re.sub(r"https?://\S+|www\.\S+", "", text)
 
-def remove_stopwords(tokens):
-    stop_words = set(stopwords.words("english"))
-    
+def remove_letters(tokens):    
     result = []
     for token in tokens:
-        if (token not in stop_words) and (len(token) > 1):
+        if (len(token) > 1):
             result.append(token)
     return result
 
 def lemmatize(tokens):
     wnl = WordNetLemmatizer()
+    stemmer = SnowballStemmer(language="english")
     
     result = []
     for token in tokens:
-        result.append(wnl.lemmatize(token))
+        new_token = wnl.lemmatize(token)
+        # new_token = stemmer.stem(new_token)
+        
+        result.append(new_token)
     return result
+
+def token2doc(tokens):
+    doc = ""
+    
+    for token in tokens:
+        doc += token + " "
+    return doc
 
 def process(text):
     new_text = to_lower(text)
@@ -41,7 +48,11 @@ def process(text):
     new_text = remove_punctuation(new_text)
     
     tokens = word_tokenize(new_text)
-    tokens = remove_stopwords(tokens)
     tokens = lemmatize(tokens)
+    tokens = remove_letters(tokens)
     
-    return tokens
+    return token2doc(tokens)
+
+# text = "computer compute computing computation computations"
+
+# print(process(text))

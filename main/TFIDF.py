@@ -5,6 +5,7 @@ class TFIDFVectorizer:
     def __init__(self):
         self.corpus = {}        # dictionary {string : int}
         self.documents = []     # list of documents represented by {"tokens" : {string : int}, "length": int}
+        self.index = {}         # dictionary {int : string} to find word
     
     def addDoc(self, tokens):
         """
@@ -17,11 +18,10 @@ class TFIDFVectorizer:
         new_doc = {"tokens":{}, "length":len(tokens)}
         
         for token in tokens:
-            if token in self.corpus:
-                self.corpus[token] += 1
-            else:
-                self.corpus[token] = 1
-            
+            if token not in self.corpus:
+                self.corpus[token] = len(self.corpus)
+                self.index[self.corpus[token]] = token
+
             if token in new_doc["tokens"]:
                 new_doc["tokens"][token] += 1
             else:
@@ -86,3 +86,13 @@ class TFIDFVectorizer:
                 tf[token][value] *= idf[token]
 
         return np.array(tf)
+
+    def getWord(self, ind):
+        """
+        Uses index of token to return string representation of a word.
+        
+        param ind: int
+        rtype: string
+        """
+        
+        return self.index[ind]
