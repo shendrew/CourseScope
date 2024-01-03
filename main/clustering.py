@@ -1,55 +1,45 @@
 import json
 import numpy as np
+import pickle
 from text import process
 
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_distances
-from scipy.cluster.hierarchy import ward, dendrogram
+from sklearn import preprocessing
+from scipy.cluster.hierarchy import ward, fcluster
 
-import matplotlib.pyplot as plt
 
 with open("./data/data.json", "r") as file:
     data = json.load(file)
 
-title = {}
-
-count = 0
+# text preprocessing
+courses={}
 raw_text=[]
-for course in data:
-    if (count == 376): break
-    raw_text.append(process(course["description"]))
-    title[count] = course["title"]
-    count +=1
+for course_i in range(len(data)):
+    raw_text.append(process(data[course_i]["description"]+data[course_i]["title"]))
+    courses[course_i] = data[course_i]
 
-vectorizer = TfidfVectorizer(ngram_range=(1,2),
-                             min_df=2,
-                             max_df= 0.6,
-                             stop_words="english",
-                             )
+# vectorize
+vectorizer = TfidfVectorizer(ngram_range=(3,5),
+                        min_df=2,
+                        max_df= 0.6,
+                        analyzer="char_wb"
+                        )
 matrix = vectorizer.fit_transform(raw_text)
-
-
-
-def kCluster():
-    kmeans = KMeans(n_clusters=60).fit(matrix)
-    # label = kmeans.labels_
-
-    my_dict = {i: np.where(kmeans.labels_ == i)[0] for i in range(kmeans.n_clusters)}
-
-    for i in range(kmeans.n_clusters):
-        for j in my_dict[i]:
-            print(title[j])
-        print("-"*60)
 
 
 def cosCluster():
     dist = cosine_distances(matrix)
     clusters = ward(dist)
-    
     print(clusters)
+    MAX_DIST = max(clusters[:, 2])*0.28     # cophenetic distance
+    fclusters = fcluster(clusters, t=MAX_DIST, criterion="distance")
+        
+    for topic in range(max(fclusters)):
+        for i in range(len(fclusters)):
+            if (fclusters[i] == topic):
+                print(courses[i]["title"])
+        print(topic, '-'*60)
     
-
-
-
 cosCluster()
