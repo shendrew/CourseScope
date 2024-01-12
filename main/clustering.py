@@ -1,17 +1,21 @@
 import json
 import numpy as np
-import pickle
 from text import process
 
-from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_distances
 from sklearn import preprocessing
 from scipy.cluster.hierarchy import ward, fcluster
 
 
-with open("./data/data.json", "r") as file:
-    data = json.load(file)
+# with open("./data/data.json", "r") as data_file:
+#     data = json.load(data_file)
+
+with open("./data/labeled_data.json", "r") as data_file:
+    data = json.load(data_file)
+
+with open("./data/labels.json", "r") as label_file:
+    labels = json.load(label_file)
 
 # text preprocessing
 courses={}
@@ -32,14 +36,34 @@ matrix = vectorizer.fit_transform(raw_text)
 def cosCluster():
     dist = cosine_distances(matrix)
     clusters = ward(dist)
-    print(clusters)
-    MAX_DIST = max(clusters[:, 2])*0.28     # cophenetic distance
+    MAX_DIST = max(clusters[:, 2])*0.27     # cophenetic distance
     fclusters = fcluster(clusters, t=MAX_DIST, criterion="distance")
-        
-    for topic in range(max(fclusters)):
-        for i in range(len(fclusters)):
-            if (fclusters[i] == topic):
-                print(courses[i]["title"])
-        print(topic, '-'*60)
     
-cosCluster()
+    # np.save("./data/clusters.npy", fclusters)
+
+
+def saveLabels():
+    clusters = np.load("./data/clusters.npy")
+    for topic in range(max(clusters)):
+        for i in range(len(clusters)):
+            if (clusters[i] == topic):
+                # use manually annotated group labels
+                courses[i]["labels"] = labels[str(topic)]
+                
+                if (courses[i]["labels"]):
+                    print(courses[i]["title"])
+        print(topic, '-'*50)
+    
+    # save data
+    courses_list = []
+    for i in range(len(clusters)):
+        courses_list.append(courses[i])
+                
+    # with open("./data/labeled_data.json", "w") as output_file:
+    #     json.dump(courses_list, output_file, indent=4)
+    
+    print("***labels geneated***")
+    
+        
+# cosCluster()
+saveLabels()
