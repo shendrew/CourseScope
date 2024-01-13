@@ -773,7 +773,10 @@
     {
         "number": "CS 157",
         "title": "Computational Logic",
-        "description": "Rigorous introduction to Symbolic Logic from a computational perspective. Encoding information in the form of logical sentences.  Reasoning with information in this form.  Overview of logic technology and its applications - in mathematics, science, engineering, business, law, and so forth. Topics include the syntax and semantics of Propositional Logic, Relational Logic, and Herbrand Logic, validity, contingency, unsatisfiability, logical equivalence, entailment, consistency, natural deduction (Fitch), mathematical induction, resolution, compactness, soundness, completeness."
+        "description": "Rigorous introduction to Symbolic Logic from a computational perspective. Encoding information in the form of logical sentences.  Reasoning with information in this form.  Overview of logic technology and its applications - in mathematics, science, engineering, business, law, and so forth. Topics include the syntax and semantics of Propositional Logic, Relational Logic, and Herbrand Logic, validity, contingency, unsatisfiability, logical equivalence, entailment, consistency, natural deduction (Fitch), mathematical induction, resolution, compactness, soundness, completeness.",
+        "labels": [
+            2
+        ]
     },
     {
         "number": "CS 161",
