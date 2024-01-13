@@ -8,11 +8,11 @@ from sklearn import preprocessing
 from scipy.cluster.hierarchy import ward, fcluster
 
 
-# with open("./data/data.json", "r") as data_file:
-#     data = json.load(data_file)
-
-with open("./data/labeled_data.json", "r") as data_file:
+with open("./data/data.json", "r") as data_file:
     data = json.load(data_file)
+
+# with open("./data/labeled_data.json", "r") as data_file:
+#     data = json.load(data_file)
 
 with open("./data/labels.json", "r") as label_file:
     labels = json.load(label_file)
